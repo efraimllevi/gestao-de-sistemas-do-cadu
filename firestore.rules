@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function admin() { return signedIn() && request.auth.token.admin == true; }
+    function safeText(field, limit) { return field is string && field.size() > 0 && field.size() <= limit; }
+    match /orcamentos/{id} {
+      // Recepção pública: usuário anônimo identificado, grava apenas uma vez.
+      // Valores do cliente são estimativas NÃO verificadas — nunca usar para cobrar.
+      allow create: if signedIn()
+        && request.auth.token.firebase.sign_in_provider == 'anonymous'
+        && request.resource.data.keys().hasOnly([
+          'reference','client','email','phone','start','end','location','audience','details',
+          'invoice','incomplete','services','sub','tax','total','createdAt','ownerUid',
+          'status','source'
+        ])
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == 'recebido'
+        && request.resource.data.source == 'site_publico'
+        && request.resource.data.createdAt == request.time
+        && safeText(request.resource.data.client, 120)
+        && safeText(request.resource.data.email, 180)
+        && safeText(request.resource.data.phone, 40)
+        && safeText(request.resource.data.start, 10)
+        && safeText(request.resource.data.end, 10)
+        && safeText(request.resource.data.location, 200)
+        && request.resource.data.audience is string
+        && request.resource.data.audience.size() <= 12
+        && request.resource.data.details is string
+        && request.resource.data.details.size() <= 1500
+        && request.resource.data.services is list
+        && request.resource.data.services.size() > 0
+        && request.resource.data.services.size() <= 34
+        && request.resource.data.invoice is bool
+        && request.resource.data.incomplete is bool
+        && request.resource.data.sub is number
+        && request.resource.data.tax is number
+        && request.resource.data.total is number;
+      // Só administradores autenticados com custom claim podem listar e atualizar.
+      allow get, list, update, delete: if admin();
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
