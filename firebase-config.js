@@ -1,8 +1,10 @@
-// Substitua os valores pelos dados de Configuração do SDK > Web no Firebase Console.
-// A configuração Web não é uma senha. Nunca coloque chaves de conta de serviço aqui.
+// Configuração pública do aplicativo Web no Firebase.
+// Não adicione chaves privadas de conta de serviço neste arquivo.
 window.FSE_FIREBASE_CONFIG = {
-  apiKey: "COLE_AQUI",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  projectId: "SEU_PROJETO",
-  appId: "COLE_AQUI"
+  apiKey: "AIzaSyBSXKINVIu_beSJ9FV4w1vUXNqHL-oJZj4",
+  authDomain: "sample-firebase-ai-app-98246.firebaseapp.com",
+  projectId: "sample-firebase-ai-app-98246",
+  storageBucket: "sample-firebase-ai-app-98246.firebasestorage.app",
+  messagingSenderId: "434617393407",
+  appId: "1:434617393407:web:41ba41814d45b70d9e2cca"
 };
