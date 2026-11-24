@@ -1,36 +1,70 @@
-# Sistema de Gestão de Segurança e Eventos — MVP 0.1
+# Gestão de Segurança & Eventos — Interface Premium 0.2
 
-Protótipo funcional da primeira etapa do projeto do Cadu, produzido pela LUMS DIGITAL.
+Sistema de orçamentos para serviços de segurança, apoio, limpeza, equipe e estrutura de eventos. O nome comercial definitivo ainda não foi escolhido. Desenvolvido como projeto da **LUMS DIGITAL**.
 
-## Como executar
+## Abrir
 
-Abra `index.html` em um navegador moderno (Chrome, Edge, Firefox ou Safari). Não é preciso instalar dependências.
+Abra `index.html` em um navegador ou publique a branch `main` via GitHub Pages. A aplicação roda sem build nem dependências de JavaScript.
 
-## Funcionalidades disponíveis
+## Base comercial: planilha FSE
 
-- Painel com indicadores e orçamentos recentes.
-- Cadastro e edição de serviços e preços por profissional/hora.
-- Calculadora de orçamentos por quantidade de profissionais e horas.
-- Cadastro e acompanhamento de propostas.
-- Impressão de propostas em PDF pela opção **Imprimir > Salvar como PDF**.
-- Geração de **minuta demonstrativa** de contrato para impressão.
-- Controle **manual** de andamento e situação de pagamento.
-- Layout responsivo para computador e celular.
-- Persistência local no navegador via `localStorage`.
+Referência: arquivo `ORÇAMENTO FSE - 04 A 15-11-2026 - CONSTÂNCIO VIEIRA.xlsx` fornecido pelo cliente (arquivo original não incluído no repositório).
 
-## Limitações importantes
+- **34 serviços** importados da aba `Serviços`, incluindo valores base e modalidade de cálculo.
+- **Diária**: preço × quantidade × número de dias, com as duas datas inclusas.
+- **Consulta diária**: mesma fórmula, mas exige valor manual negociado quando preço cadastrado é zero.
+- **Unidade**: preço × quantidade, independentemente de dias.
+- **Fixo**: preço × quantidade, independentemente de dias.
+- **Público**: material de limpeza completo calculado em R$ 2,00 por participante, mínimo de R$ 250,00. Um valor manual pode substituir essa regra para uma proposta.
+- **Preço manual**: substitui o valor base do item na proposta; não altera o catálogo.
+- **Nota fiscal**: quando selecionada, acréscimo de 15% sobre a soma dos serviços. A célula de cálculo da aba Montagem usa 15% apesar de o rótulo da aba Orçamento apresentar 13%. Por segurança, a aplicação identifica explicitamente 15% e essa divergência deve ser confirmada pelo responsável antes de uso comercial.
+- **Jornada**: planilha informa referência de 8 horas; excedentes a R$ 30,00/hora por profissional. **Não são somados automaticamente** porque o arquivo não traz campos de jornada/hora excedente por item.
 
-Este protótipo não deve ser usado em produção com dados reais de clientes: não há autenticação, backend, controle de acesso entre usuários ou sincronização entre dispositivos. O status de pagamento é apenas manual e não atesta recebimento; os contratos são minutas e não há assinatura eletrônica. O QR Code de validação ainda **não está implementado**, pois exige um servidor que valide tokens e consulte dados confiáveis. Os valores de serviços pré-configurados são exemplos e devem ser ajustados à operação do cliente.
+## Caso de teste fornecido
 
-## Próximas etapas
+Evento CBG — Constâncio Vieira — 04/11/2026 a 15/11/2026.
 
-1. Definição das entidades e regras comerciais (clientes, eventos, serviços, propostas, contratos, pagamentos e etiquetas).
-2. Firebase Authentication, Firestore e regras de segurança; segregação de acesso administrativo e público.
-3. Geração de contratos a partir de modelo revisado por profissional jurídico e integração com provedor de assinatura eletrônica.
-4. Integração de pagamento via provedor compatível com confirmação por webhook autenticado.
-5. Token aleatório para cada contrato/etiqueta, QR Code com link de consulta e validação no servidor sem divulgação excessiva de dados pessoais.
-6. Histórico de auditoria e backups.
+| Item | Total |
+|---|---:|
+| Apoio de limpeza, 2 × 5 × R$ 250 | R$ 2.500 |
+| Apoio de limpeza, 4 × 7 × R$ 250 | R$ 7.000 |
+| Segurança, 2 × 2 × R$ 280 (override) | R$ 1.120 |
+| Bombeiro civil, 2 × 5 × R$ 270 | R$ 2.700 |
+| Material de limpeza completo (override) | R$ 3.000 |
+| Segurança, 2 × 1 × R$ 280 (override) | R$ 560 |
+| Segurança, 4 × 5 × R$ 280 (override) | R$ 5.600 |
+| **Serviços** | **R$ 22.480** |
+| **Nota fiscal 15%** | **R$ 3.372** |
+| **Total** | **R$ 25.852** |
 
-## Observação
+O exemplo já aparece na base demonstrativa.
 
-A implementação final depende da confirmação do fluxo das etiquetas: crachá do funcionário ou identificação do contrato/cliente.
+## Funcionalidades prontas nesta versão
+
+- Dashboard moderno e responsivo;
+- Catálogo com os 34 serviços e preços da planilha;
+- Alteração de valores base no navegador;
+- Criação e edição de propostas por evento;
+- Períodos independentes por item e contagem inclusiva dos dias;
+- Preços negociados por item;
+- Cálculo automático do imposto de emissão;
+- Listagem, busca, estados comerciais **manuais**;
+- Documento comercial imprimível pelo navegador (Salvar como PDF);
+- Persistência no `localStorage`.
+
+## Segurança e limitações
+
+**É um protótipo local.** Não introduza dados pessoais reais de clientes e não o use como sistema de produção.
+
+Não existe autenticação, Firebase, proteção de API, controle de acesso, confirmação bancária de pagamento, assinatura eletrônica nem validação por QR Code. O status comercial é editado manualmente, não representa prova de pagamento. A aplicação não emite nota fiscal. O documento gerado é orçamento, não contrato celebrado.
+
+Para produção: Firebase Auth + Firestore com regras rigorosas; backend para precificação autoritativa; modelo de contrato revisado; plataforma de assinatura eletrônica; pagamentos confirmados por webhook verificado; QR Code com token aleatório e consulta segura sem expor dados sensíveis; auditoria, LGPD e backups.
+
+## Próximas entregas
+
+1. Revalidar tabela e regras com o proprietário da empresa (inclusive divergência 13% vs 15%);
+2. Cadastro de clientes e login por papel;
+3. Sincronização no Firebase com regras de segurança;
+4. Modelos de contrato, versionamento e assinatura eletrônica;
+5. Integração de pagamento e conciliação;
+6. QR Code e impressão de etiquetas com consulta de contrato e pagamento válidos no backend.
