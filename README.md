@@ -1,3 +1,29 @@
+# Firebase — configuração necessária
+
+O formulário público foi preparado para **enviar solicitações à coleção `orcamentos` do Firestore**. Sem configuração e publicação das regras, **nenhuma solicitação será enviada**.
+
+## Passos no Console Firebase
+
+1. Abra [console.firebase.google.com](https://console.firebase.google.com), crie ou selecione seu projeto.
+2. Em **Configurações do projeto → Seus apps**, adicione um **app Web** e copie os valores `apiKey`, `authDomain`, `projectId` e `appId` para `firebase-config.js`. A configuração Web pode ficar no frontend; **não** cole uma chave privada de conta de serviço.
+3. Em **Authentication → Sign-in method**, ative o provedor **Anônimo** para identificar cada envio. Autenticação anônima **não** significa login administrativo.
+4. Em **Firestore Database**, crie o banco em modo de produção, escolhendo a região adequada. Na aba **Regras**, copie o conteúdo de `firestore.rules` e **publique**.
+5. Hospede o projeto por HTTPS (Firebase Hosting, GitHub Pages ou equivalente) e configure os domínios autorizados do Authentication, se necessário.
+6. Faça um teste com dados fictícios e confira no Firestore se o documento aparece na coleção `orcamentos`, com `status: "recebido"`.
+
+## Restrições antes do uso real
+
+- O site recebe orçamento e grava dados no Firestore **somente após** a configuração acima.
+- O preço exibido é uma **estimativa calculada no navegador, não confiável para cobrança**. Antes de aprovar ou gerar contratos, é necessário recalcular no backend com uma tabela de preços protegida.
+- O site não realiza cobrança, comprovação de pagamento nem assinatura eletrônica.
+- O painel `admin.html` foi preservado, mas **ainda é um protótipo local sem login**. Não tem acesso aos orçamentos do Firestore. A leitura da coleção foi restrita nas regras a usuários com a custom claim `admin: true`, atribuída apenas via backend autorizado.
+- **Não habilite leituras públicas** da coleção: ela contém nomes, contatos e informações do evento.
+- Em produção, adote **Firebase App Check**, limites antiabuso e validações em Cloud Functions, consentimento/aviso de privacidade e política de retenção (LGPD). Contas anônimas não são proteção suficiente contra spam.
+- Não envie dados pessoais reais de clientes até conferir os controles e termos de privacidade.
+- Horas extras e modalidade de pagamento ainda exigem definição comercial.
+
+---
+
 # Gestão de Segurança & Eventos — Interface Premium 0.2
 
 Sistema de orçamentos para serviços de segurança, apoio, limpeza, equipe e estrutura de eventos. O nome comercial definitivo ainda não foi escolhido. Desenvolvido como projeto da **LUMS DIGITAL**.
